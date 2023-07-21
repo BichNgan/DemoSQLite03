@@ -1,9 +1,12 @@
-package android.demosqlite03;
+package android.demosqlite03.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.demosqlite03.Controller.LoaiSPHandler;
+import android.demosqlite03.Model.LoaiSP;
+import android.demosqlite03.R;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     String path="/data/data/android.demosqlite03/database/qlsp2.db";
     ArrayList<String>lsMaloai = new ArrayList<>();
     ArrayAdapter<String> adapter;
+    SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
         loadLoaiSP();
         adapter=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,lsMaloai);
         lvLoaiSP.setAdapter(adapter);
+        //--------------------------
+        LoaiSPHandler loaiSPHandler= new LoaiSPHandler(getApplicationContext(),LoaiSPHandler.DB_NAME,
+                null,LoaiSPHandler.DB_VERSION);
+        loaiSPHandler.onCreate(db);
+
+
     }
 
     public  void addControl()
@@ -45,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void loadLoaiSP()
     {
-        SQLiteDatabase db=SQLiteDatabase.openDatabase(path,null,SQLiteDatabase.CREATE_IF_NECESSARY);
+        db=SQLiteDatabase.openDatabase(path,null,SQLiteDatabase.CREATE_IF_NECESSARY);
         Cursor cursor =db.rawQuery("select * from LoaiSP",null);
         cursor.moveToFirst();
         do {
