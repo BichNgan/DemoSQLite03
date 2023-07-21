@@ -1,8 +1,10 @@
 package android.demosqlite03.Controller;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.demosqlite03.Model.LoaiSP;
 
 import androidx.annotation.Nullable;
 
@@ -27,11 +29,13 @@ public class LoaiSPHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db=SQLiteDatabase.openDatabase(PATH,null,SQLiteDatabase.CREATE_IF_NECESSARY);
-        String sql = "CREATE TABLE IF NOT EXISTS "+ TABLE_NAME_LOAISP + "( " + MLOAI_COL + " INTEGER NOT NULL UNIQUE, " +
+        String sql = "CREATE TABLE IF NOT EXISTS "+ TABLE_NAME_LOAISP +
+                "( " + MLOAI_COL + " INTEGER NOT NULL UNIQUE, " +
                 TLOAI_COL + " TEXT NOT NULL UNIQUE, PRIMARY KEY("+ MLOAI_COL + "))";
         db.execSQL(sql);
 
-        String sql2 = "CREATE TABLE IF NOT EXISTS "+ TABLE_NAME_SP + "( " + MSP_COL + " INTEGER NOT NULL UNIQUE, " +
+        String sql2 = "CREATE TABLE IF NOT EXISTS "+ TABLE_NAME_SP + "( " +
+                MSP_COL + " INTEGER NOT NULL UNIQUE, " +
                 TSP_COL + " TEXT NOT NULL UNIQUE, " + SL_COL + "INTEGER, "+ MLOAI_COL +
                 "INTEGER NOT NULL, PRIMARY KEY("+ MSP_COL + "))";
         db.execSQL(sql2);
@@ -42,4 +46,40 @@ public class LoaiSPHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
+    public void initData()
+    {
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(PATH,null,SQLiteDatabase.OPEN_READWRITE);
+        String sql1 = "INSERT OR IGNORE INTO " + TABLE_NAME_LOAISP + " VALUES ('1', 'Nước giải khát')";
+        db.execSQL(sql1);
+        String sql2 = "INSERT OR IGNORE INTO " + TABLE_NAME_LOAISP + " VALUES ('2', 'Bánh kẹo')";
+        db.execSQL(sql2);
+        String sql3 = "INSERT OR IGNORE INTO " + TABLE_NAME_LOAISP + " VALUES ('3', 'Sữa')";
+        db.execSQL(sql3);
+        db.close();
+
+    }
+   public void insertANewRecord (LoaiSP sp)
+    {
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(PATH,
+                null,SQLiteDatabase.OPEN_READWRITE);
+        ContentValues values = new ContentValues();
+        values.put(MLOAI_COL,sp.getMaloai());
+        values.put(TLOAI_COL,sp.getTenloai());
+        db.insert(TABLE_NAME_LOAISP,null,values);
+        db.close();
+    }
+
+    public void updateLoaiSP(LoaiSP oldLoaiSP, LoaiSP newLoaiSP)
+    {
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(PATH,
+                null,SQLiteDatabase.OPEN_READWRITE);
+        ContentValues values= new ContentValues();
+        values.put(MLOAI_COL,newLoaiSP.getMaloai());
+        values.put(TLOAI_COL,newLoaiSP.getTenloai());
+        db.update(TABLE_NAME_LOAISP,values,MLOAI_COL+"=?",
+                new String[]{String.valueOf(newLoaiSP.getMaloai())});
+        db.close();
+    }
+
 }
