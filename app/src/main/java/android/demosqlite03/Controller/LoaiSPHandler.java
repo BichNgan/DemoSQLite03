@@ -27,11 +27,11 @@ public class LoaiSPHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db=SQLiteDatabase.openDatabase(PATH,null,SQLiteDatabase.CREATE_IF_NECESSARY);
-        String sql = "CREATE TABLE "+ TABLE_NAME_LOAISP + "( " + MLOAI_COL + " INTEGER NOT NULL UNIQUE, " +
+        String sql = "CREATE TABLE IF NOT EXISTS "+ TABLE_NAME_LOAISP + "( " + MLOAI_COL + " INTEGER NOT NULL UNIQUE, " +
                 TLOAI_COL + " TEXT NOT NULL UNIQUE, PRIMARY KEY("+ MLOAI_COL + "))";
         db.execSQL(sql);
 
-        String sql2 = "CREATE TABLE "+ TABLE_NAME_SP + "( " + MSP_COL + " INTEGER NOT NULL UNIQUE, " +
+        String sql2 = "CREATE TABLE IF NOT EXISTS "+ TABLE_NAME_SP + "( " + MSP_COL + " INTEGER NOT NULL UNIQUE, " +
                 TSP_COL + " TEXT NOT NULL UNIQUE, " + SL_COL + "INTEGER, "+ MLOAI_COL +
                 "INTEGER NOT NULL, PRIMARY KEY("+ MSP_COL + "))";
         db.execSQL(sql2);
